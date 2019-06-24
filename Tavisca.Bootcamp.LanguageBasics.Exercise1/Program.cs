@@ -19,83 +19,88 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             var result = FindDigit(args).Equals(expected) ? "PASS" : "FAIL";
             Console.WriteLine($"{args} : {result}");
         }
-
-        public static int FindDigit(string equation)
+        public static int Operand_needed(int star,int question_mark,int equal,string equation)
         {
-            int i, s = -1, q = -1, e = -1;
-            // char c;
-            for (i = 0; i < equation.Length; i += 1)
+            int i;
+            string value = equation.Substring(equal + 1, (equation.Length) - equal - 1);
+            int val = int.Parse(value);
+            string ope1, ope2;
+            if (star < question_mark)
             {
-                if (equation[i] == '*')
-                    s = i;
-                else if (equation[i] == '=')
-                    e = i;
-                else if (equation[i] == '?')
-                    q = i;
-            }
-            //Console.WriteLine($"{s}{e}{q}");
-            if (q < e)
-            {
-                string value = equation.Substring(e + 1, (equation.Length) - e - 1);
-                // Console.WriteLine($"{value}");
-                int val = int.Parse(value);
-                string ope1, ope2;
-                if (s < q)
-                {
-                    ope1 = equation.Substring(0, s);
-                    ope2 = equation.Substring(s + 1, e - s - 1);
-                }
-                else
-                {
-                    ope1 = equation.Substring(s + 1, e - s - 1);
-                    ope2 = equation.Substring(0, s);
-                }
-                /*Console.WriteLine($"{ope1}");
-                Console.WriteLine($"{ope2}");*/
-                int operand1 = int.Parse(ope1);
-                int answer = val / operand1;
-                if (val % operand1 != 0)
-                    return -1;
-                string answer1 = Convert.ToString(answer);
-                if (answer1.Length == ope2.Length)
-                {
-                    for (i = 0; i < ope2.Length; i += 1)
-                    {
-                        if (ope2[i] == '?')
-                        {
-                            int ans = int.Parse(answer1.Substring(i, 1));
-                            return ans;
-                        }
-                    }
-                }
-                else
-                    return -1;
+                ope1 = equation.Substring(0, star);
+                ope2 = equation.Substring(star + 1, equal - star - 1);
             }
             else
             {
-                string ope1 = equation.Substring(0, s);
-                string ope2 = equation.Substring(s + 1, e - s - 1);
-                string value = equation.Substring(e + 1, (equation.Length) - e - 1);
-                int operand1 = int.Parse(ope1);
-                int operand2 = int.Parse(ope2);
-                int answer = operand1 * operand2;
-                string answer1 = Convert.ToString(answer);
-                if (answer1.Length == value.Length)
+                ope1 = equation.Substring(star + 1, equal - star - 1);
+                ope2 = equation.Substring(0, star);
+            }
+            int operand1 = int.Parse(ope1);
+            int answer = val / operand1;
+            if (val % operand1 != 0)
+                return -1;
+            string answer1 = Convert.ToString(answer);
+
+            if (answer1.Length == ope2.Length)
+            {
+                for (i = 0; i < ope2.Length; i += 1)
                 {
-                    for (i = 0; i < value.Length; i += 1)
+                    if (ope2[i] == '?')
                     {
-                        if (value[i] == '?')
-                        {
-                            int ans = int.Parse(answer1.Substring(i, 1));
-                            return ans;
-                        }
+                        int ans = int.Parse(answer1.Substring(i, 1)); return ans;
                     }
                 }
-                else
-                    return -1;
+
             }
-            return 0;
-            throw new NotImplementedException();
+                return -1;
+        }
+        public static int Value_needed(int star, int question_mark, int equal, string equation)
+        {
+            int i;
+            string ope1 = equation.Substring(0, star);
+            string ope2 = equation.Substring(star + 1, equal - star - 1);
+            string value = equation.Substring(equal + 1, (equation.Length) - equal - 1);
+            int operand1 = int.Parse(ope1);
+            int operand2 = int.Parse(ope2);
+            int answer = operand1 * operand2;
+            string answer1 = Convert.ToString(answer);
+            if (answer1.Length == value.Length)
+            {
+                for (i = 0; i < value.Length; i += 1)
+                {
+                    if (value[i] == '?')
+                    {
+                        int ans = int.Parse(answer1.Substring(i, 1)); return ans;
+                    }
+                }
+
+            }
+                return -1;
+        }
+        public static int FindDigit(string equation)
+        {
+            if (equation.Length == 0 || equation == null)
+                return -1;
+            int i, star = -1, question_mark = -1, equal = -1;
+            for (i = 0; i < equation.Length; i += 1)
+            {
+                if (equation[i] == '*')
+                    star = i;
+                else if (equation[i] == '=')
+                    equal = i;
+                else if (equation[i] == '?')
+                    question_mark = i;
+            }
+            if (question_mark < equal)
+            {
+                return Operand_needed(star, question_mark, equal, equation);
+            }
+            else
+            {
+                return Value_needed(star, question_mark, equal, equation);
+            }
+            
+            //throw new NotImplementedException();
         }
     }
 }
