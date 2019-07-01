@@ -19,8 +19,10 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             var result = FindDigit(args).Equals(expected) ? "PASS" : "FAIL";
             Console.WriteLine($"{args} : {result}");
         }
-        public static int Operand_needed(int star,int question_mark,int equal,string equation)
+        public static int Lefthand_operation(int star,int question_mark,int equal,string equation)
         {
+            if (equation.Length == 0 || equation == null)
+                return -1;
             int i;
             string value = equation.Substring(equal + 1, (equation.Length) - equal - 1);
             int val = int.Parse(value);
@@ -54,8 +56,10 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             }
                 return -1;
         }
-        public static int Value_needed(int star, int question_mark, int equal, string equation)
+        public static int Righthand_operation(int star, int question_mark, int equal, string equation)
         {
+            if (equation.Length == 0 || equation == null)
+                return -1;
             int i;
             string ope1 = equation.Substring(0, star);
             string ope2 = equation.Substring(star + 1, equal - star - 1);
@@ -93,11 +97,11 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
             }
             if (question_mark < equal)
             {
-                return Operand_needed(star, question_mark, equal, equation);
+                return Lefthand_operation(star, question_mark, equal, equation);
             }
             else
             {
-                return Value_needed(star, question_mark, equal, equation);
+                return Righthand_operation(star, question_mark, equal, equation);
             }
             
             //throw new NotImplementedException();
